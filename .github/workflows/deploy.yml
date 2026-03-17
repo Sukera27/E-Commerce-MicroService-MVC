@@ -25,25 +25,35 @@ jobs:
           java-version: '17'
 
       # ---------------------------
-      # Build microservices
+      # Build & Push Microservices (Manual Step by Step)
       # ---------------------------
-      - name: Build with Maven
-        run: mvn clean install -DskipTests
-
-      - name: Login to ACR
+      
+      # 1. API Gateway
+      - name: Build & Push API Gateway
         run: |
-          echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME --password-stdin
-
-      - name: Build & Push Microservices
-        run: |
-          docker build -t $ACR_LOGIN_SERVER/api-gateway:latest -f apigetway/Dockerfile .
-          docker build -t $ACR_LOGIN_SERVER/inventory-service:latest -f inventory-service/Dockerfile .
-          docker build -t $ACR_LOGIN_SERVER/orders-service:latest -f orders-service/Dockerfile .
-          docker build -t $ACR_LOGIN_SERVER/products-service:latest -f products-service/Dockerfile .
-
+          mvn clean package -DskipTests -f apigetway/pom.xml
+          docker build -t $ACR_LOGIN_SERVER/api-gateway:latest ./apigetway
           docker push $ACR_LOGIN_SERVER/api-gateway:latest
+
+      # 2. Inventory Service
+      - name: Build & Push Inventory Service
+        run: |
+          mvn clean package -DskipTests -f inventory-service/pom.xml
+          docker build -t $ACR_LOGIN_SERVER/inventory-service:latest ./inventory-service
           docker push $ACR_LOGIN_SERVER/inventory-service:latest
+
+      # 3. Orders Service
+      - name: Build & Push Orders Service
+        run: |
+          mvn clean package -DskipTests -f orders-service/pom.xml
+          docker build -t $ACR_LOGIN_SERVER/orders-service:latest ./orders-service
           docker push $ACR_LOGIN_SERVER/orders-service:latest
+
+      # 4. Products Service
+      - name: Build & Push Products Service
+        run: |
+          mvn clean package -DskipTests -f products-service/pom.xml
+          docker build -t $ACR_LOGIN_SERVER/products-service:latest ./products-service
           docker push $ACR_LOGIN_SERVER/products-service:latest
 
       # ---------------------------
