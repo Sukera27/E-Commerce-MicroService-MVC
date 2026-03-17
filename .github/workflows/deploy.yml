@@ -1,0 +1,80 @@
+name: Build and Push to ACR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      ACR_NAME: contenedoresjg12345
+      ACR_LOGIN_SERVER: contenedoresjg12345.azurecr.io
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ---------------------------
+      # Build microservices
+      # ---------------------------
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      - name: Login to ACR
+        run: |
+          echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME --password-stdin
+
+      - name: Build & Push Microservices
+        run: |
+          docker build -t $ACR_LOGIN_SERVER/api-gateway:latest -f apigetway/Dockerfile .
+          docker build -t $ACR_LOGIN_SERVER/inventory-service:latest -f inventory-service/Dockerfile .
+          docker build -t $ACR_LOGIN_SERVER/orders-service:latest -f orders-service/Dockerfile .
+          docker build -t $ACR_LOGIN_SERVER/products-service:latest -f products-service/Dockerfile .
+
+          docker push $ACR_LOGIN_SERVER/api-gateway:latest
+          docker push $ACR_LOGIN_SERVER/inventory-service:latest
+          docker push $ACR_LOGIN_SERVER/orders-service:latest
+          docker push $ACR_LOGIN_SERVER/products-service:latest
+
+      # ---------------------------
+      # Pull official images, tag and push
+      # ---------------------------
+      - name: Push prebuilt images (Keycloak, Zipkin, Kafka, Zookeeper)
+        run: |
+          for IMAGE in \
+            "quay.io/keycloak/keycloak:latest keycloak" \
+            "openzipkin/zipkin:latest zipkin" \
+            "confluentinc/cp-zookeeper:latest zookeeper" \
+            "confluentinc/cp-kafka:7.4.0 kafka"; do
+            ORIGINAL=$(echo $IMAGE | cut -d' ' -f1)
+            TAG=$(echo $IMAGE | cut -d' ' -f2)
+            docker pull $ORIGINAL
+            docker tag $ORIGINAL $ACR_LOGIN_SERVER/$TAG:latest
+            docker push $ACR_LOGIN_SERVER/$TAG:latest
+          done
+
+      # ---------------------------
+      # Build and push Prometheus
+      # ---------------------------
+      - name: Build & Push Prometheus
+        run: |
+          docker build -t $ACR_LOGIN_SERVER/prometheus:latest -f files/prometheus.Dockerfile .
+          docker push $ACR_LOGIN_SERVER/prometheus:latest
+
+      # ---------------------------
+      # Build and push Grafana
+      # ---------------------------
+      - name: Build & Push Grafana
+        run: |
+          docker build -t $ACR_LOGIN_SERVER/grafana:latest -f files/grafana/Dockerfile .
+          docker push $ACR_LOGIN_SERVER/grafana:latest

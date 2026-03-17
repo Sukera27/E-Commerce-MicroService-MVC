@@ -1,0 +1,96 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      observability:
+        enabled: true
+      routes:
+        - id: inventory-prometheus
+          uri: http://localhost:8081
+          predicates:
+            - Path=/actuator/inventory/prometheus
+          filters:
+            - RewritePath=/actuator/inventory/prometheus, /actuator/prometheus
+
+        - id: orders-prometheus
+          uri: http://localhost:8082
+          predicates:
+            - Path=/actuator/orders/prometheus
+          filters:
+            - RewritePath=/actuator/orders/prometheus, /actuator/prometheus
+
+        - id: products-prometheus
+          uri: http://localhost:8083
+          predicates:
+            - Path=/actuator/products/prometheus
+          filters:
+            - RewritePath=/actuator/products/prometheus, /actuator/prometheus
+        - id: orders-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - TokenRelay=
+        - id: inventory-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/inventory/**
+          filters:
+            - TokenRelay=
+        - id: product-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/products/**
+          filters:
+            - TokenRelay=
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: microservice_client
+            client-secret: qNEMgvMR5BoCPkqL9sRn5jf6HW9sJsLw
+            authorization-grant-type: authorization_code
+            scope: openid
+            redirect-uri: http://localhost:8080/login/oauth2/code/keycloak
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8181/realms/microservice-realm
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/microservice-realm
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+  endpoint:
+    prometheus:
+      enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name}, %X{traceId:-}, %X{spanId:-}] - %m%n"
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    com.sukera: DEBUG 
+    

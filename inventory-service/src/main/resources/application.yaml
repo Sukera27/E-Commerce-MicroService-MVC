@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: inventory-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5431/ms_inventory
+    username: sukera27
+    password: Rafael123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/microservice-realm
+
+server:
+  port: 8081
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+  endpoint:
+    prometheus:
+      enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}  
+logging:
+  pattern:
+    level: "%5p [${spring.application.name}, %X{traceId:-}, %X{spanId:-}] - %m%n"
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    com.sukera: DEBUG 
