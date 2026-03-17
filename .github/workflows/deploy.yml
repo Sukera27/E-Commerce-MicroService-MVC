@@ -23,6 +23,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       # ---------------------------
       # Build & Push Microservices (Manual Step by Step)
