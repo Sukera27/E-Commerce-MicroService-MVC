@@ -85,7 +85,7 @@ jobs:
       # ---------------------------
       - name: Build & Push Prometheus
         run: |
-          docker build -t $ACR_LOGIN_SERVER/prometheus:latest -f files/prometheus.Dockerfile .
+          docker build -t $ACR_LOGIN_SERVER/prometheus:latest -f files/Dockerfile .
           docker push $ACR_LOGIN_SERVER/prometheus:latest
 
       # ---------------------------
