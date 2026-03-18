@@ -3,9 +3,9 @@ spring:
     name: orders-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/ms_orders
-    username: sukera27
-    password: Rafael123
+    url: jdbc:postgresql://postgres-testjg.postgres.database.azure.com:5432/ms_orders?sslmode=require
+    username: adminaz
+    password: Rafael27
     driver-class-name: org.postgresql.Driver
 
   jpa:
