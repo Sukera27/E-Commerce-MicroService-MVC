@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - api-gateway/deployment.yml
+  - api-gateway/service.yml
+  - inventory-service/deployment.yml
+  - inventory-service/service.yml
+  - orders-service/deployment.yml
+  - orders-service/service.yml
+  - products-service/deployment.yml
+  - products-service/service.yml
+  - keycloak/deployment.yml
+  - keycloak/service.yml
+  - zookeeper/deployment.yml
+  - zookeeper/service.yml
+  - kafka/deployment.yml
+  - kafka/service.yml
+  - zipkin/deployment.yml
+  - zipkin/service.yml
+  - secret-db.yml
+  - ingress.yml
+
+images:
+  - name: contenedoresjg12345.azurecr.io/api-gateway
+    newTag: latest
+  - name: contenedoresjg12345.azurecr.io/inventory-service
+    newTag: latest
+  - name: contenedoresjg12345.azurecr.io/orders-service
+    newTag: latest
+  - name: contenedoresjg12345.azurecr.io/products-service
+    newTag: latest

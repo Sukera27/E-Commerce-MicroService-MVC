@@ -3,9 +3,9 @@ spring:
     name: products-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ms_products
-    username: sukera27
-    password: Rafael123
+    url: jdbc:postgresql://postgres-testjg.postgres.database.azure.com:5432/ms_products?sslmode=require
+    username: adminaz
+    password: Rafael27
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -16,7 +16,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8181/realms/microservice-realm
+          issuer-uri: http://keycloak:8181/realms/microservice-realm
 
 server:
   port: 8083

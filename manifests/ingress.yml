@@ -3,9 +3,10 @@ kind: Ingress
 metadata:
   name: api-gateway-ingress
   namespace: microservices-eCommerce
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 spec:
   ingressClassName: nginx
-
   rules:
     - http:
         paths:
@@ -27,7 +28,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: product-service
+              name: products-service
               port:
                 number: 8083
         - path: /auth
@@ -36,12 +37,4 @@ spec:
             service:
               name: keycloak
               port:
-                number: 8181
-        - path: /api/v1/notifications
-          pathType: Prefix
-          backend:
-            service:
-              name: notification-service
-              port:
-                number: 0
-                
+                number: 8080
