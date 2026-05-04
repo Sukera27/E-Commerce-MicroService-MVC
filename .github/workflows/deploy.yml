@@ -9,8 +9,8 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      ACR_NAME: contenedoresjg12345
-      ACR_LOGIN_SERVER: contenedoresjg12345.azurecr.io
+      ACR_NAME: contenedoresjg987654
+      ACR_LOGIN_SERVER: contenedoresjg987654.azurecr.io
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 
