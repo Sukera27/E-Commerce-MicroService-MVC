@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: orders-service
-        image: contenedoresjg12345.azurecr.io/orders-service:latest
+        image: contenedoresjg987654.azurecr.io/orders-service:latest
         ports:
         - containerPort: 8082
         env:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: contenedoresjg12345.azurecr.io/api-gateway:latest
+        image: contenedoresjg987654.azurecr.io/api-gateway:latest
         ports:
         - containerPort: 8080
         env:

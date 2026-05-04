@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: products-service
-        image: contenedoresjg12345.azurecr.io/products-service:latest
+        image: contenedoresjg987654.azurecr.io/products-service:latest
         ports:
         - containerPort: 8083
         env:

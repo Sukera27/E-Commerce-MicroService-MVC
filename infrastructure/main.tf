@@ -112,7 +112,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 # Azure Container Registry
 # --------------------------
 resource "azurerm_container_registry" "acr" {
-  name                = "contenedoresjg12345"
+  name                = "contenedoresjg987654"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   sku                 = "Basic"

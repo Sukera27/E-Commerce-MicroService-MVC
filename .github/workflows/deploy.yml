@@ -69,10 +69,10 @@ jobs:
       - name: Update Kustomize
         run: |
           cd manifests
-          kustomize edit set image contenedoresjg12345.azurecr.io/api-gateway=contenedoresjg12345.azurecr.io/api-gateway:${{ github.sha }}
-          kustomize edit set image contenedoresjg12345.azurecr.io/inventory-service=contenedoresjg12345.azurecr.io/inventory-service:${{ github.sha }}
-          kustomize edit set image contenedoresjg12345.azurecr.io/orders-service=contenedoresjg12345.azurecr.io/orders-service:${{ github.sha }}
-          kustomize edit set image contenedoresjg12345.azurecr.io/products-service=contenedoresjg12345.azurecr.io/products-service:${{ github.sha }}
+          kustomize edit set image contenedoresjg987654.azurecr.io/api-gateway=contenedoresjg987654.azurecr.io/api-gateway:${{ github.sha }}
+          kustomize edit set image contenedoresjg987654.azurecr.io/inventory-service=contenedoresjg987654.azurecr.io/inventory-service:${{ github.sha }}
+          kustomize edit set image contenedoresjg987654.azurecr.io/orders-service=contenedoresjg987654.azurecr.io/orders-service:${{ github.sha }}
+          kustomize edit set image contenedoresjg987654.azurecr.io/products-service=contenedoresjg987654.azurecr.io/products-service:${{ github.sha }}
 
       - name: Commit & Push changes
         run: |
